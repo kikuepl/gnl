@@ -1,7 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sytorium <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/14 18:04:20 by sytorium          #+#    #+#             */
+/*   Updated: 2025/03/14 18:04:21 by sytorium         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "get_next_line_bonus.h"
 
-// 指定されたファイルディスクリプタに対応する残りのバッファから
-// 1行分を抽出し、残りの部分を更新するヘルパー関数
 static char *get_line(char **rest)
 {
     char    *line;
@@ -15,7 +24,6 @@ static char *get_line(char **rest)
     newline_ptr = ft_strchr(*rest, '\n');
     if (newline_ptr)
     {
-        // 改行文字までの長さ（改行文字も含む）
         line_length = newline_ptr - *rest + 1;
         line = (char *)malloc(sizeof(char) * (line_length + 1));
         if (!line)
@@ -27,7 +35,6 @@ static char *get_line(char **rest)
             i++;
         }
         line[i] = '\0';
-        // 残りの部分を更新
         temp = ft_strdup(*rest + line_length);
         free(*rest);
         *rest = temp;
@@ -39,7 +46,6 @@ static char *get_line(char **rest)
     }
     else
     {
-        // 改行が見つからない場合は、残り全体を返す
         line = ft_strdup(*rest);
         free(*rest);
         *rest = NULL;
@@ -47,39 +53,43 @@ static char *get_line(char **rest)
     return line;
 }
 
-char *get_next_line(int fd)
+char    *get_next_line(int fd)
 {
-    static char *rest[FD_MAX]; 
-    char        buffer[BUFFER_SIZE + 1];
+    static char *rest[FD_MAX];
+    char        *buffer;
     ssize_t     bytes_read;
     char        *temp;
 
-    if (fd < 0 || fd >= FD_MAX || BUFFER_SIZE <= 0)
+    if (fd < 0 || BUFFER_SIZE <= 0)
         return NULL;
-    // 改行が見つかるまでバッファから読み込む
-    while (!ft_strchr(rest[fd], '\n'))
+    buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+    if(!buffer)
+        return NULL;
+    while (!ft_strchr(rest, '\n'))
     {
         bytes_read = read(fd, buffer, BUFFER_SIZE);
         if (bytes_read < 0)
         {
-            if (rest[fd])
+            if (rest)
             {
-                free(rest[fd]);
+                free(rest);
                 rest[fd] = NULL;
             }
+            free(buffer);
             return NULL;
         }
         if (bytes_read == 0)
             break;
         buffer[bytes_read] = '\0';
-        if (!rest[fd])
+        if (!rest)
             rest[fd] = ft_strdup(buffer);
         else
         {
-            temp = ft_strjoin(rest[fd], buffer);
-            free(rest[fd]);
+            temp = ft_strjoin(rest, buffer);
+            free(rest);
             rest[fd] = temp;
         }
     }
-    return get_line(&rest[fd]);
+    free(buffer);
+    return get_line(&rest);
 }

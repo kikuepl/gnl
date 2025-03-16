@@ -9,11 +9,8 @@
 /*   Updated: 2025/03/14 18:04:21 by sytorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 #include "get_next_line.h"
 
-// 残りの文字列から 1 行分を抽出し、残りを更新する補助関数
 static char *get_line(char **rest)
 {
     char    *line;
@@ -27,7 +24,6 @@ static char *get_line(char **rest)
     newline_ptr = ft_strchr(*rest, '\n');
     if (newline_ptr)
     {
-        // 改行文字までの長さを計算（改行文字も含む）
         line_length = newline_ptr - *rest + 1;
         line = (char *)malloc(sizeof(char) * (line_length + 1));
         if (!line)
@@ -39,11 +35,9 @@ static char *get_line(char **rest)
             i++;
         }
         line[i] = '\0';
-        // 残りの部分を更新
         temp = ft_strdup(*rest + line_length);
         free(*rest);
         *rest = temp;
-        // 残りの文字列が空の場合は NULL にする
         if (**rest == '\0')
         {
             free(*rest);
@@ -52,7 +46,6 @@ static char *get_line(char **rest)
     }
     else
     {
-        // 改行が見つからない場合は、残り全体を返す
         line = ft_strdup(*rest);
         free(*rest);
         *rest = NULL;
@@ -63,13 +56,15 @@ static char *get_line(char **rest)
 char    *get_next_line(int fd)
 {
     static char *rest;
-    char        buffer[BUFFER_SIZE + 1];
+    char        *buffer;
     ssize_t     bytes_read;
     char        *temp;
 
     if (fd < 0 || BUFFER_SIZE <= 0)
         return NULL;
-    // 改行が見つかるまでループする
+    buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+    if(!buffer)
+        return NULL;
     while (!ft_strchr(rest, '\n'))
     {
         bytes_read = read(fd, buffer, BUFFER_SIZE);
@@ -80,6 +75,7 @@ char    *get_next_line(int fd)
                 free(rest);
                 rest = NULL;
             }
+            free(buffer);
             return NULL;
         }
         if (bytes_read == 0)
@@ -94,5 +90,6 @@ char    *get_next_line(int fd)
             rest = temp;
         }
     }
+    free(buffer);
     return get_line(&rest);
 }
