@@ -1,42 +1,40 @@
-#include "get_next_line.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sytorium <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/19 22:23:37 by sytorium          #+#    #+#             */
+/*   Updated: 2025/03/19 22:26:19 by sytorium         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-size_t ft_strlen(const char *s)
+#include "get_next_line_bonus.h"
+
+size_t	ft_strlen(const char *s)
 {
-    size_t i = 0;
-    while(s && s[i])
-        i++;
-    return i;
+	size_t	i;
+
+	i = 0;
+	while (s && s[i])
+		i++;
+	return (i);
 }
-// // 文字列内に特定の文字 c があるか探す関数
-// char    *ft_strchr(const char *s, int c)
-// {
-//     if (!s)
-//         return NULL;
-//     while (*s)
-//     {
-//         if (*s == (char)c)
-//             return (char *)s;
-//         s++;
-//     }
-//     if ((char)c == '\0')
-//         return (char *)s;
-//     return NULL;
-// }
 
-char *ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
-    if(!s)
-        return NULL;
-    while(*s)
-    {
-        if(*s == (char) c){
-            return (char *)s;
-        }
-        s++;
-    }
-    if((char)c == '\0')
-        return (char *)s;
-    return NULL;
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	if ((char)c == '\0')
+		return ((char *)s);
+	return (NULL);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -56,22 +54,26 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		*str++ = *s1++;
 	while (*s2)
 		*str++ = *s2++;
-    *str = '\0';
+	*str = '\0';
 	return (ptr);
 }
 
-char    *ft_strdup(const char *s1)
+char	*ft_strdup(const char *s1)
 {
-    size_t  len = ft_strlen(s1);
-    char    *dup = malloc(sizeof(char) * (len + 1));
-    size_t  i = 0;
-    if (!dup)
-        return NULL;
-    while (i < len)
-    {
-        dup[i] = s1[i];
-        i++;
-    }
-    dup[i] = '\0';
-    return dup;
+	size_t	i;
+	size_t	len;
+	char	*res;
+
+	len = ft_strlen(s1);
+	res = (char *)malloc(len + 1);
+	if (!res)
+		return (0);
+	i = 0;
+	while (s1[i])
+	{
+		res[i] = s1[i];
+		i++;
+	}
+	res[i] = '\0';
+	return (res);
 }
