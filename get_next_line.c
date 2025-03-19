@@ -53,27 +53,27 @@ static char *get_line(char **rest)
     return line;
 }
 
-char    *get_next_line(int fd)
+char *get_next_line(int fd)
 {
-    static char *rest;
+    static char *rest[FD_MAX];
     char        *buffer;
     ssize_t     bytes_read;
     char        *temp;
 
     if (fd < 0 || BUFFER_SIZE <= 0)
         return NULL;
-    buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-    if(!buffer)
+    buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+    if (!buffer)
         return NULL;
-    while (!ft_strchr(rest, '\n'))
+    while (rest[fd] == NULL || !ft_strchr(rest[fd], '\n'))
     {
         bytes_read = read(fd, buffer, BUFFER_SIZE);
         if (bytes_read < 0)
         {
-            if (rest)
+            if (rest[fd])
             {
-                free(rest);
-                rest = NULL;
+                free(rest[fd]);
+                rest[fd] = NULL;
             }
             free(buffer);
             return NULL;
@@ -81,15 +81,15 @@ char    *get_next_line(int fd)
         if (bytes_read == 0)
             break;
         buffer[bytes_read] = '\0';
-        if (!rest)
-            rest = ft_strdup(buffer);
+        if (!rest[fd])
+            rest[fd] = ft_strdup(buffer);
         else
         {
-            temp = ft_strjoin(rest, buffer);
-            free(rest);
-            rest = temp;
+            temp = ft_strjoin(rest[fd], buffer);
+            free(rest[fd]);
+            rest[fd] = temp;
         }
     }
     free(buffer);
-    return get_line(&rest);
+    return get_line(&rest[fd]);
 }

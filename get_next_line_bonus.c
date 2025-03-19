@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
 
+#include "get_next_line_bonus.h"
+
 static char *get_line(char **rest)
 {
     char    *line;
@@ -53,26 +55,31 @@ static char *get_line(char **rest)
     return line;
 }
 
-char    *get_next_line(int fd)
+char *get_next_line(int fd)
 {
-    static char *rest[FD_MAX];
-    char        *buffer;
-    ssize_t     bytes_read;
-    char        *temp;
+    
+    static char *rest[FD_MAX];  //読み取るファイルの残り
+    char        *buffer;        //読み取ったデータを格納
+    ssize_t     bytes_read;     //読み取ったバイト数
+    char        *temp;          //一時的な文字列
 
+    //error処理
     if (fd < 0 || BUFFER_SIZE <= 0)
         return NULL;
-    buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-    if(!buffer)
+    //ヒープ領域にBUFFER_SIZE + 1分のメモリを確保
+    buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+    if (!buffer)
         return NULL;
-    while (!ft_strchr(rest, '\n'))
+    //rest[fd]がNULLか、改行がない場合
+    //全部読み終わった場合か、改行がない場合
+    while (rest[fd] == NULL || !ft_strchr(rest[fd], '\n'))
     {
         bytes_read = read(fd, buffer, BUFFER_SIZE);
         if (bytes_read < 0)
         {
-            if (rest)
+            if (rest[fd])
             {
-                free(rest);
+                free(rest[fd]);
                 rest[fd] = NULL;
             }
             free(buffer);
@@ -81,15 +88,15 @@ char    *get_next_line(int fd)
         if (bytes_read == 0)
             break;
         buffer[bytes_read] = '\0';
-        if (!rest)
+        if (!rest[fd])
             rest[fd] = ft_strdup(buffer);
         else
         {
-            temp = ft_strjoin(rest, buffer);
-            free(rest);
+            temp = ft_strjoin(rest[fd], buffer);
+            free(rest[fd]);
             rest[fd] = temp;
         }
     }
     free(buffer);
-    return get_line(&rest);
+    return get_line(&rest[fd]);
 }
