@@ -30,6 +30,8 @@ char	*extract_line(char **rest, char *ptr)
 	}
 	line[i] = '\0';
 	temp_line = ft_strdup(*rest + line_length);
+	if(temp_line == NULL)
+		return (NULL);
 	free(*rest);
 	*rest = temp_line;
 	if (**rest == '\0')
