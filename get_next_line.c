@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sytorium <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/14 18:04:20 by sytorium          #+#    #+#             */
-/*   Updated: 2025/03/19 21:53:30 by sytorium         ###   ########.fr       */
+/*   Created: 2025/03/21 22:55:29 by sytorium          #+#    #+#             */
+/*   Updated: 2025/03/21 22:55:42 by sytorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
 char	*extract_line(char **rest, char *ptr)
 {
