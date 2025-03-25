@@ -6,32 +6,27 @@
 /*   By: sytorium <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 18:04:20 by sytorium          #+#    #+#             */
-/*   Updated: 2025/03/19 21:53:30 by sytorium         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:37:40 by sytorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
 
 char	*extract_line(char **rest, char *ptr)
 {
-	size_t	i;
 	size_t	line_length;
 	char	*temp_line;
 	char	*line;	
 
 	line_length = ptr - *rest + 1;
-	line = (char *)malloc(sizeof(char) * (line_length + 1));
-	if (!line)
+	line = ft_substr(*rest, 0, line_length);
+	if (line == NULL)
 		return (NULL);
-	i = 0;
-	while (i < line_length)
-	{
-		line[i] = (*rest)[i];
-		i++;
-	}
-	line[i] = '\0';
 	temp_line = ft_strdup(*rest + line_length);
-	if(temp_line == NULL)
+	if (temp_line == NULL)
+	{
+		free(line);
 		return (NULL);
+	}
 	free(*rest);
 	*rest = temp_line;
 	if (**rest == '\0')

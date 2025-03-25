@@ -6,32 +6,27 @@
 /*   By: sytorium <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 22:55:29 by sytorium          #+#    #+#             */
-/*   Updated: 2025/03/21 22:55:42 by sytorium         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:37:22 by sytorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
 
 char	*extract_line(char **rest, char *ptr)
 {
-	size_t	i;
 	size_t	line_length;
 	char	*temp_line;
 	char	*line;	
 
 	line_length = ptr - *rest + 1;
-	line = (char *)malloc(sizeof(char) * (line_length + 1));
-	if (!line)
+	line = ft_substr(*rest, 0, line_length);
+	if (line == NULL)
 		return (NULL);
-	i = 0;
-	while (i < line_length)
-	{
-		line[i] = (*rest)[i];
-		i++;
-	}
-	line[i] = '\0';
 	temp_line = ft_strdup(*rest + line_length);
-	if(temp_line == NULL)
+	if (temp_line == NULL)
+	{
+		free(line);
 		return (NULL);
+	}
 	free(*rest);
 	*rest = temp_line;
 	if (**rest == '\0')
@@ -51,9 +46,7 @@ static char	*get_line(char **rest)
 		return (NULL);
 	newline_ptr = ft_strchr(*rest, '\n');
 	if (newline_ptr)
-	{
 		line = extract_line(rest, newline_ptr);
-	}
 	else
 	{
 		line = ft_strdup(*rest);
@@ -80,7 +73,7 @@ int	update_rest_buffer(char **rest, char *buffer, ssize_t bytes_read)
 	if (bytes_read == 0)
 		return (1);
 	buffer[bytes_read] = '\0';
-	if (!*rest)
+	if (*rest == NULL)
 		*rest = ft_strdup(buffer);
 	else
 	{
